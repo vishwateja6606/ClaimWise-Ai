@@ -1,0 +1,24 @@
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: claimwise-ai
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/claimwise_db
+    username: postgres
+    password: 6606
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
