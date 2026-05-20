@@ -1,8 +1,8 @@
 package com.claimwise.auth.enums;
 
-public enum Roles {
+public enum Role {
     CUSTOMER,
     CLAIM_OFFICER,
-    ADMIN,
-    SUPER_ADMIN
+    ADMIN
 }
+
