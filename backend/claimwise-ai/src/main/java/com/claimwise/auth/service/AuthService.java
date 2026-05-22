@@ -5,6 +5,7 @@ import com.claimwise.auth.dto.LoginRequest;
 import com.claimwise.auth.dto.RegisterRequest;
 import com.claimwise.auth.dto.UserResponse;
 import com.claimwise.auth.entity.User;
+import com.claimwise.auth.enums.Role;
 import com.claimwise.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +30,7 @@ public class AuthService {
         user.setFullName(request.fullName());
         user.setEmail(request.email());
         user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole(request.role());
+        user.setRole(Role.CUSTOMER);
 
         User saveduser = userRepository.save(user);
         return toResponse(saveduser);
@@ -58,6 +59,13 @@ public class AuthService {
         String token = jwtService.generateToken(user);
 
         return new AuthResponse(token, "Bearer", toResponse(user));
+    }
+
+    public UserResponse getCurrentUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return toResponse(user);
     }
 
 
