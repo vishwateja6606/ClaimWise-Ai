@@ -1,9 +1,6 @@
 package com.claimwise.auth.service;
 
-import com.claimwise.auth.dto.AuthResponse;
-import com.claimwise.auth.dto.LoginRequest;
-import com.claimwise.auth.dto.RegisterRequest;
-import com.claimwise.auth.dto.UserResponse;
+import com.claimwise.auth.dto.*;
 import com.claimwise.auth.entity.User;
 import com.claimwise.auth.enums.Role;
 import com.claimwise.auth.repository.UserRepository;
@@ -66,6 +63,22 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return toResponse(user);
+    }
+
+    public void changePassword(ChangePasswordRequest request, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+            throw new RuntimeException("New password must be different from current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
     }
 
 

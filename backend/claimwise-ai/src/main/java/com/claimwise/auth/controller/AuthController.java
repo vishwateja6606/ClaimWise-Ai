@@ -1,9 +1,6 @@
 package com.claimwise.auth.controller;
 
-import com.claimwise.auth.dto.AuthResponse;
-import com.claimwise.auth.dto.LoginRequest;
-import com.claimwise.auth.dto.RegisterRequest;
-import com.claimwise.auth.dto.UserResponse;
+import com.claimwise.auth.dto.*;
 import com.claimwise.auth.entity.User;
 import com.claimwise.auth.service.AuthService;
 import com.claimwise.common.ApiResponse;
@@ -11,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth", description = "Authentication APIs for ClaimWise AI")
@@ -38,6 +36,16 @@ public class AuthController {
                 "Current user fetched successfully",
                 authService.getCurrentUser(authentication.getName())
         );
+    }
+
+    @Operation(summary = "Change the current password")
+    @PutMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            Authentication authentication
+    ) {
+        authService.changePassword(request, authentication.getName());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Password changed successfully", null));
     }
 
 
